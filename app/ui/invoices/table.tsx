@@ -1,5 +1,5 @@
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
+import Avatar from '@/app/ui/avatar';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
 
@@ -24,7 +24,8 @@ export default async function InvoicesTable({
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Avatar name={invoice.name} size="sm" />
                       <p>{invoice.name}</p>
                     </div>
                     <p className="text-sm text-gray-500">{invoice.email}</p>
@@ -38,10 +39,9 @@ export default async function InvoicesTable({
                     </p>
                     <p>{formatDateToLocal(invoice.date)}</p>
                   </div>
-                  <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={invoice.id} />
-                    <DeleteInvoice id={invoice.id} />
-                  </div>
+                  <p className="text-sm text-gray-500">
+                    {invoice.channel} · {invoice.region}
+                  </p>
                 </div>
               </div>
             ))}
@@ -50,22 +50,22 @@ export default async function InvoicesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  Cliente
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  Región
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  Canal
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  Importe
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Fecha
                 </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Estado
                 </th>
               </tr>
             </thead>
@@ -77,11 +77,18 @@ export default async function InvoicesTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{invoice.name}</p>
+                      <Avatar name={invoice.name} size="sm" />
+                      <div>
+                        <p>{invoice.name}</p>
+                        <p className="text-xs text-gray-500">{invoice.email}</p>
+                      </div>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.email}
+                    {invoice.region}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.channel}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatCurrency(invoice.amount)}
@@ -91,12 +98,6 @@ export default async function InvoicesTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <InvoiceStatus status={invoice.status} />
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={invoice.id} />
-                      <DeleteInvoice id={invoice.id} />
-                    </div>
                   </td>
                 </tr>
               ))}
