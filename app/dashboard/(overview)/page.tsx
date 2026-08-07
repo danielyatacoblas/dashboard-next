@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   return (
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
+      <h1 className={`${lusitana.className} mb-6 text-2xl md:text-3xl`}>
         Resumen de ventas
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

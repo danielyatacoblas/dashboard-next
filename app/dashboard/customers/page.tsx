@@ -19,7 +19,7 @@ export default async function Page(props: {
 
   return (
     <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
+      <h1 className={`${lusitana.className} mb-8 text-2xl md:text-3xl`}>
         Clientes
       </h1>
       <Search placeholder="Buscar clientes..." />
