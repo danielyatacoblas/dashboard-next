@@ -1,0 +1,35 @@
+flowchart LR
+  subgraph persona["Personas"]
+    direction TB
+    analista(["Analista<br/>revisa el desempeño del negocio"])
+  end
+  subgraph rutas["Rutas"]
+    direction TB
+    landing["Landing<br/>presentación del producto"]
+    panel["Panel<br/>indicadores y gráficos"]
+    tablas["Pedidos y clientes<br/>búsqueda y paginación en la URL"]
+  end
+  subgraph servidor["Servidor"]
+    direction TB
+    rsc{{"Server Components<br/>cada sección carga por separado"}}
+    suspense["Suspense<br/>esqueletos mientras llega el dato"]
+  end
+  subgraph datos["Datos"]
+    direction TB
+    consultas{{"Capa de consultas<br/>interfaz asíncrona con latencia simulada"}}
+    dataset[("Dataset sembrado<br/>18 meses con tendencia y estacionalidad")]
+  end
+  subgraph vista["Visualización"]
+    direction TB
+    recharts["Gráficos<br/>ingresos, canal, región y sparklines"]
+    tema[("Lenguaje visual<br/>paleta y ejes centralizados")]
+  end
+  analista -->|"entra"| landing
+  landing -->|"ver panel"| panel
+  panel -->|"renderiza"| rsc
+  tablas -->|"parámetros de URL"| rsc
+  rsc -->|"pide datos"| consultas
+  consultas -->|"lee"| dataset
+  rsc -.->|"streaming"| suspense
+  consultas -->|"series"| recharts
+  recharts -->|"usa"| tema

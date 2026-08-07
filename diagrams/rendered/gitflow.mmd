@@ -1,0 +1,38 @@
+flowchart LR
+  subgraph trabajo["Ramas de trabajo"]
+    direction TB
+    feature["feature/*<br/>funcionalidad nueva"]
+    fix["fix/*<br/>corrección de defecto"]
+    chore["chore/*<br/>mantenimiento y tooling"]
+    docs["docs/*<br/>documentación y capturas"]
+  end
+  subgraph integracion["Integración"]
+    direction TB
+    develop["develop<br/>integra el trabajo antes de publicar"]
+  end
+  subgraph verificacion["Verificación"]
+    direction TB
+    build["npm run build<br/>compilación de producción"]
+    types["npm run typecheck<br/>tsc --noEmit"]
+    lint["npm run lint<br/>eslint"]
+  end
+  subgraph publicacion["Publicación"]
+    direction TB
+    main["main<br/>solo recibe merges desde develop"]
+  end
+  subgraph distribucion["Distribución"]
+    direction TB
+    github["GitHub<br/>historia con un único autor"]
+    release["Versión publicada<br/>clonar y ejecutar"]
+  end
+  feature -->|"merge --no-ff"| develop
+  fix -->|"merge --no-ff"| develop
+  chore -->|"merge --no-ff"| develop
+  docs -->|"merge --no-ff"| develop
+  develop -->|"se verifica"| build
+  build -->|"y además"| types
+  types -->|"y además"| lint
+  lint -->|"merge --no-ff"| main
+  main -->|"push"| github
+  github -->|"publica"| release
+  build -.->|"si falla, se corrige"| develop
