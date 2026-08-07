@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "project": "Kipu Analytics",
+  "views": {
+    "gitflow": {
+      "name": "Gitflow",
+      "subtitle": "Modelo de ramas: el trabajo nace de develop, se verifica y solo entonces llega a main.",
+      "footer": "Convención: ramas cortas por propósito, merges --no-ff para conservar la traza, commits convencionales en inglés.",
+      "legend": [
+        {
+          "status": "FEATURE",
+          "label": "trabajo"
+        },
+        {
+          "status": "DEVELOP",
+          "label": "integracion"
+        },
+        {
+          "status": "MAIN",
+          "label": "publicado"
+        }
+      ],
+      "groups": [
+        {
+          "id": "trabajo",
+          "title": "Ramas de trabajo",
+          "x": 48,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#ede9fe"
+        },
+        {
+          "id": "integracion",
+          "title": "Integración",
+          "x": 396,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#dbeafe"
+        },
+        {
+          "id": "verificacion",
+          "title": "Verificación",
+          "x": 744,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#fef3c7"
+        },
+        {
+          "id": "publicacion",
+          "title": "Publicación",
+          "x": 1092,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#dcfce7"
+        },
+        {
+          "id": "distribucion",
+          "title": "Distribución",
+          "x": 1440,
+          "y": 105,
+          "width": 432,
+          "height": 835,
+          "color": "#e2e8f0"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "feature",
+          "label": "feature/*",
+          "detail": "funcionalidad nueva",
+          "x": 90,
+          "y": 150,
+          "group": "trabajo",
+          "kind": "branch",
+          "status": "FEATURE"
+        },
+        {
+          "id": "fix",
+          "label": "fix/*",
+          "detail": "corrección de defecto",
+          "x": 90,
+          "y": 345,
+          "group": "trabajo",
+          "kind": "branch",
+          "status": "FIX"
+        },
+        {
+          "id": "chore",
+          "label": "chore/*",
+          "detail": "mantenimiento y tooling",
+          "x": 90,
+          "y": 540,
+          "group": "trabajo",
+          "kind": "branch",
+          "status": "DOCS"
+        },
+        {
+          "id": "docs",
+          "label": "docs/*",
+          "detail": "documentación y capturas",
+          "x": 90,
+          "y": 735,
+          "group": "trabajo",
+          "kind": "branch",
+          "status": "DOCS"
+        },
+        {
+          "id": "develop",
+          "label": "develop",
+          "detail": "integra el trabajo antes de publicar",
+          "x": 438,
+          "y": 420,
+          "group": "integracion",
+          "kind": "merge",
+          "status": "DEVELOP"
+        },
+        {
+          "id": "build",
+          "label": "npm run build",
+          "detail": "compilación de producción",
+          "x": 786,
+          "y": 250,
+          "group": "verificacion",
+          "kind": "check",
+          "status": "DOCS"
+        },
+        {
+          "id": "types",
+          "label": "npm run typecheck",
+          "detail": "tsc --noEmit",
+          "x": 786,
+          "y": 445,
+          "group": "verificacion",
+          "kind": "check",
+          "status": "DOCS"
+        },
+        {
+          "id": "lint",
+          "label": "npm run lint",
+          "detail": "eslint",
+          "x": 786,
+          "y": 640,
+          "group": "verificacion",
+          "kind": "check",
+          "status": "DOCS"
+        },
+        {
+          "id": "main",
+          "label": "main",
+          "detail": "solo recibe merges desde develop",
+          "x": 1134,
+          "y": 420,
+          "group": "publicacion",
+          "kind": "release",
+          "status": "MAIN"
+        },
+        {
+          "id": "github",
+          "label": "GitHub",
+          "detail": "historia con un único autor",
+          "x": 1482,
+          "y": 345,
+          "group": "distribucion",
+          "kind": "release",
+          "status": "MAIN"
+        },
+        {
+          "id": "release",
+          "label": "Versión publicada",
+          "detail": "clonar y ejecutar",
+          "x": 1482,
+          "y": 540,
+          "group": "distribucion",
+          "kind": "release",
+          "status": "MAIN"
+        }
+      ],
+      "edges": [
+        {
+          "from": "feature",
+          "to": "develop",
+          "label": "merge --no-ff",
+          "style": "solid"
+        },
+        {
+          "from": "fix",
+          "to": "develop",
+          "label": "merge --no-ff",
+          "style": "solid"
+        },
+        {
+          "from": "chore",
+          "to": "develop",
+          "label": "merge --no-ff",
+          "style": "solid"
+        },
+        {
+          "from": "docs",
+          "to": "develop",
+          "label": "merge --no-ff",
+          "style": "solid"
+        },
+        {
+          "from": "develop",
+          "to": "build",
+          "label": "se verifica",
+          "style": "solid"
+        },
+        {
+          "from": "build",
+          "to": "types",
+          "label": "y además",
+          "style": "solid"
+        },
+        {
+          "from": "types",
+          "to": "lint",
+          "label": "y además",
+          "style": "solid"
+        },
+        {
+          "from": "lint",
+          "to": "main",
+          "label": "merge --no-ff",
+          "style": "solid"
+        },
+        {
+          "from": "main",
+          "to": "github",
+          "label": "push",
+          "style": "solid"
+        },
+        {
+          "from": "github",
+          "to": "release",
+          "label": "publica",
+          "style": "solid"
+        },
+        {
+          "from": "build",
+          "to": "develop",
+          "label": "si falla, se corrige",
+          "style": "dashed"
+        }
+      ]
+    },
+    "flujo": {
+      "name": "Flujo de la aplicación",
+      "subtitle": "Analítica sobre un dataset determinista: sin base de datos, funciona al clonar.",
+      "footer": "La capa de consultas conserva una interfaz asíncrona, de modo que cambiarla por Postgres sería tocar un solo módulo.",
+      "legend": [
+        {
+          "status": "IMPLEMENTED",
+          "label": "implementado"
+        },
+        {
+          "status": "LOCAL",
+          "label": "en memoria"
+        }
+      ],
+      "groups": [
+        {
+          "id": "persona",
+          "title": "Personas",
+          "x": 48,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#e2e8f0"
+        },
+        {
+          "id": "rutas",
+          "title": "Rutas",
+          "x": 396,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#ede9fe"
+        },
+        {
+          "id": "servidor",
+          "title": "Servidor",
+          "x": 744,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#dbeafe"
+        },
+        {
+          "id": "datos",
+          "title": "Datos",
+          "x": 1092,
+          "y": 105,
+          "width": 300,
+          "height": 835,
+          "color": "#dcfce7"
+        },
+        {
+          "id": "vista",
+          "title": "Visualización",
+          "x": 1440,
+          "y": 105,
+          "width": 432,
+          "height": 835,
+          "color": "#fef3c7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "analista",
+          "label": "Analista",
+          "detail": "revisa el desempeño del negocio",
+          "x": 90,
+          "y": 420,
+          "group": "persona",
+          "kind": "actor",
+          "status": "EXTERNAL"
+        },
+        {
+          "id": "landing",
+          "label": "Landing",
+          "detail": "presentación del producto",
+          "x": 438,
+          "y": 180,
+          "group": "rutas",
+          "kind": "api",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "panel",
+          "label": "Panel",
+          "detail": "indicadores y gráficos",
+          "x": 438,
+          "y": 420,
+          "group": "rutas",
+          "kind": "api",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "tablas",
+          "label": "Pedidos y clientes",
+          "detail": "búsqueda y paginación en la URL",
+          "x": 438,
+          "y": 660,
+          "group": "rutas",
+          "kind": "api",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "rsc",
+          "label": "Server Components",
+          "detail": "cada sección carga por separado",
+          "x": 786,
+          "y": 300,
+          "group": "servidor",
+          "kind": "queue",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "suspense",
+          "label": "Suspense",
+          "detail": "esqueletos mientras llega el dato",
+          "x": 786,
+          "y": 560,
+          "group": "servidor",
+          "kind": "check",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "consultas",
+          "label": "Capa de consultas",
+          "detail": "interfaz asíncrona con latencia simulada",
+          "x": 1134,
+          "y": 300,
+          "group": "datos",
+          "kind": "queue",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "dataset",
+          "label": "Dataset sembrado",
+          "detail": "18 meses con tendencia y estacionalidad",
+          "x": 1134,
+          "y": 560,
+          "group": "datos",
+          "kind": "database",
+          "status": "LOCAL"
+        },
+        {
+          "id": "recharts",
+          "label": "Gráficos",
+          "detail": "ingresos, canal, región y sparklines",
+          "x": 1482,
+          "y": 300,
+          "group": "vista",
+          "kind": "monitor",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "tema",
+          "label": "Lenguaje visual",
+          "detail": "paleta y ejes centralizados",
+          "x": 1482,
+          "y": 560,
+          "group": "vista",
+          "kind": "object_store",
+          "status": "IMPLEMENTED"
+        }
+      ],
+      "edges": [
+        {
+          "from": "analista",
+          "to": "landing",
+          "label": "entra",
+          "style": "solid"
+        },
+        {
+          "from": "landing",
+          "to": "panel",
+          "label": "ver panel",
+          "style": "solid"
+        },
+        {
+          "from": "panel",
+          "to": "rsc",
+          "label": "renderiza",
+          "style": "solid"
+        },
+        {
+          "from": "tablas",
+          "to": "rsc",
+          "label": "parámetros de URL",
+          "style": "solid"
+        },
+        {
+          "from": "rsc",
+          "to": "consultas",
+          "label": "pide datos",
+          "style": "solid"
+        },
+        {
+          "from": "consultas",
+          "to": "dataset",
+          "label": "lee",
+          "style": "solid"
+        },
+        {
+          "from": "rsc",
+          "to": "suspense",
+          "label": "streaming",
+          "style": "dashed"
+        },
+        {
+          "from": "consultas",
+          "to": "recharts",
+          "label": "series",
+          "style": "solid"
+        },
+        {
+          "from": "recharts",
+          "to": "tema",
+          "label": "usa",
+          "style": "solid"
+        }
+      ]
+    }
+  }
+}
