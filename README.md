@@ -1,4 +1,4 @@
-# 📊 Kipu Analytics — Dashboard de ventas e-commerce para Perú
+# Kipu Analytics — Dashboard de ventas e-commerce para Perú
 
 <p align="center">
   <img src="docs/screenshots/02_dashboard.png" alt="Dashboard de Kipu Analytics con KPIs, gráfico de ingresos y últimos pedidos" width="900">
@@ -15,19 +15,19 @@
 
 Dashboard de analítica de ventas para un e-commerce peruano, construido con el **App Router de Next.js**: Server Components, streaming con `Suspense`, búsqueda y paginación sincronizadas con la URL, y visualizaciones con Recharts. Todos los importes en **soles (S/)** y datos regionales del Perú.
 
-> 💡 **Funciona al clonar**: no necesita base de datos ni variables de entorno. El dataset es determinístico y se genera en memoria con un PRNG de semilla fija, así que los números son idénticos en cada ejecución.
+> **Funciona al clonar**: no necesita base de datos ni variables de entorno. El dataset es determinístico y se genera en memoria con un PRNG de semilla fija, así que los números son idénticos en cada ejecución.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- 📈 **4 tarjetas KPI** (ventas cobradas, por cobrar, pedidos, clientes) con **sparkline** de los últimos 6 meses y variación porcentual real frente al mes anterior.
-- 📉 **Gráfico de ingresos mensuales** comparando el período actual con el anterior punto por punto (línea punteada).
-- 🥧 **Ventas por canal** (Web / App / Marketplace) en donut y **ventas por región** en barras horizontales.
-- 🔍 **Búsqueda con debounce** y **paginación** en la tabla de pedidos, ambas sincronizadas con `searchParams` (compartible por URL).
-- ⚡ **Streaming con Suspense**: cada sección carga con su propio skeleton, sin bloquear la página.
-- 🎨 Avatares generados con iniciales (sin imágenes externas), estados `loading`, `error` y `not-found` por segmento.
-- 🇵🇪 Formato `es-PE` para moneda y fechas.
+- **4 tarjetas KPI** (ventas cobradas, por cobrar, pedidos, clientes) con **sparkline** de los últimos 6 meses y variación porcentual real frente al mes anterior.
+- **Gráfico de ingresos mensuales** comparando el período actual con el anterior punto por punto (línea punteada).
+- **Ventas por canal** (Web / App / Marketplace) en donut y **ventas por región** en barras horizontales.
+- **Búsqueda con debounce** y **paginación** en la tabla de pedidos, ambas sincronizadas con `searchParams` (compartible por URL).
+- **Streaming con Suspense**: cada sección carga con su propio skeleton, sin bloquear la página.
+- Avatares generados con iniciales (sin imágenes externas), estados `loading`, `error` y `not-found` por segmento.
+- Formato `es-PE` para moneda y fechas.
 
-## 🖼️ Interfaces
+## Interfaces
 
 | Landing | Pedidos (búsqueda + paginación) |
 |---|---|
@@ -37,14 +37,14 @@ Dashboard de analítica de ventas para un e-commerce peruano, construido con el 
 |---|---|
 | ![Clientes](docs/screenshots/04_clientes.png) | <img src="docs/screenshots/05_movil.png" alt="Vista móvil" width="260"> |
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```mermaid
 flowchart LR
-    P["📄 Server Components<br/>(páginas del dashboard)"] --> Q["🔌 Capa de consultas<br/>app/lib/data.ts"]
-    Q --> D[("🧮 Dataset determinístico<br/>PRNG mulberry32")]
-    P --> S["⏳ Suspense + skeletons"]
-    P --> C["📊 Client Components<br/>gráficos Recharts"]
+    P["Server Components<br/>(páginas del dashboard)"] --> Q["Capa de consultas<br/>app/lib/data.ts"]
+    Q --> D[("Dataset determinístico<br/>PRNG mulberry32")]
+    P --> S["Suspense + skeletons"]
+    P --> C["Client Components<br/>gráficos Recharts"]
 ```
 
 **Decisiones de diseño:**
@@ -53,7 +53,7 @@ flowchart LR
 - **Datos con forma realista.** El generador aplica tendencia mensual al alza, estacionalidad (picos en julio por Fiestas Patrias y en diciembre por Navidad), una curva de cobranza que decae suavemente con la antigüedad del pedido, y adquisición progresiva de clientes.
 - **Un solo lenguaje visual para los gráficos**: paleta, ejes y tooltips centralizados en `app/ui/charts/theme.ts`, de modo que los seis gráficos se lean como un sistema y no como piezas sueltas.
 
-## 🚀 Ejecución local
+## Ejecución local
 
 ```bash
 git clone https://github.com/danielyatacoblas/dashboard-analytic.git
@@ -64,7 +64,7 @@ pnpm dev         # http://localhost:3000
 
 Sin `.env`, sin base de datos, sin servicios externos.
 
-## 🛠️ Stack
+## Stack
 
 | Capa | Tecnología |
 |---|---|
@@ -75,10 +75,10 @@ Sin `.env`, sin base de datos, sin servicios externos.
 | Iconos | Heroicons |
 | Fuentes | next/font (Lusitana + Roboto) |
 
-## 👤 Autor
+## Autor
 
 **Daniel Yataco Blas** — [GitHub](https://github.com/danielyatacoblas)
 
-## 📄 Licencia
+## Licencia
 
 Proyecto de portafolio bajo **licencia propietaria**: el código puede verse con fines de evaluación profesional, pero no copiarse, redistribuirse ni reutilizarse sin autorización escrita. Ver [LICENSE](LICENSE).
