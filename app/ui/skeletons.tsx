@@ -82,6 +82,22 @@ export function LatestInvoicesSkeleton() {
   );
 }
 
+export function ChartPanelSkeleton() {
+  return (
+    <div
+      className={`${shimmer} relative flex w-full flex-col overflow-hidden md:col-span-4`}
+    >
+      <div className="mb-4 h-8 w-40 rounded-md bg-gray-100" />
+      <div className="flex grow flex-col rounded-xl bg-gray-100 p-4">
+        <div className="h-[260px] rounded-md bg-white" />
+        <div className="flex items-center pb-2 pt-6">
+          <div className="h-4 w-40 rounded-md bg-gray-200" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardSkeleton() {
   return (
     <>

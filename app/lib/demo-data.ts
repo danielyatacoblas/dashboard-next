@@ -203,6 +203,18 @@ export function lastMonths(count: number): Date[] {
   return months;
 }
 
+/**
+ * The last `count` COMPLETE months (the current, partial month is excluded so
+ * aggregates and deltas are not skewed by a month still in progress).
+ */
+export function completeMonths(count: number): Date[] {
+  const months: Date[] = [];
+  for (let m = count; m >= 1; m--) {
+    months.push(new Date(anchor.getFullYear(), anchor.getMonth() - m, 1));
+  }
+  return months;
+}
+
 /** Simulated network/database latency so Suspense boundaries are visible. */
 export function simulateLatency(ms = 300) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));

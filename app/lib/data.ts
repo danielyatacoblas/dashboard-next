@@ -13,7 +13,9 @@ import {
   Revenue,
 } from './definitions';
 import {
+  CHANNELS,
   MONTH_LABELS_ES,
+  completeMonths,
   customers,
   invoices,
   lastMonths,
@@ -73,6 +75,129 @@ export async function fetchCardData() {
     numberOfInvoices: invoices.length,
     totalPaidInvoices: formatCurrency(paid),
     totalPendingInvoices: formatCurrency(pending),
+  };
+}
+
+export type RevenueComparisonPoint = {
+  month: string; // label of the current-period month
+  actual: number; // soles
+  anterior: number; // soles, same offset within the previous period
+};
+
+/**
+ * Monthly revenue of the last 8 complete months compared point-by-point with
+ * the 8 months before them.
+ */
+export async function fetchRevenueComparison(): Promise<
+  RevenueComparisonPoint[]
+> {
+  await simulateLatency(500);
+
+  const totals = revenueByMonth();
+  const soles = (month: Date) =>
+    Math.round((totals.get(monthKey(month)) ?? 0) / 100);
+
+  const months = completeMonths(16);
+  const previous = months.slice(0, 8);
+  const current = months.slice(8);
+
+  return current.map((month, i) => ({
+    month: `${MONTH_LABELS_ES[month.getMonth()]} ${String(
+      month.getFullYear(),
+    ).slice(-2)}`,
+    actual: soles(month),
+    anterior: soles(previous[i]),
+  }));
+}
+
+export type ChannelSales = { channel: string; total: number };
+export type RegionSales = { region: string; total: number };
+
+/** Sales in soles by channel over the last 12 complete months. */
+export async function fetchSalesByChannel(): Promise<ChannelSales[]> {
+  await simulateLatency(400);
+
+  const window = new Set(completeMonths(12).map(monthKey));
+  const totals = new Map<string, number>(CHANNELS.map((c) => [c, 0]));
+  for (const invoice of invoices) {
+    if (!window.has(invoice.date.slice(0, 7))) continue;
+    totals.set(invoice.channel, (totals.get(invoice.channel) ?? 0) + invoice.amount);
+  }
+  return CHANNELS.map((channel) => ({
+    channel,
+    total: Math.round((totals.get(channel) ?? 0) / 100),
+  }));
+}
+
+/** Sales in soles by region over the last 12 complete months, descending. */
+export async function fetchSalesByRegion(): Promise<RegionSales[]> {
+  await simulateLatency(400);
+
+  const window = new Set(completeMonths(12).map(monthKey));
+  const totals = new Map<string, number>();
+  for (const invoice of invoices) {
+    if (!window.has(invoice.date.slice(0, 7))) continue;
+    totals.set(invoice.region, (totals.get(invoice.region) ?? 0) + invoice.amount);
+  }
+  return [...totals.entries()]
+    .map(([region, total]) => ({ region, total: Math.round(total / 100) }))
+    .sort((a, b) => b.total - a.total);
+}
+
+export type KpiTrend = {
+  /** Monthly values for the last 6 complete months. */
+  series: number[];
+  /** Percent change of the last month vs the month before. */
+  delta: number;
+};
+
+export type KpiTrends = {
+  collected: KpiTrend;
+  pending: KpiTrend;
+  invoices: KpiTrend;
+  customers: KpiTrend;
+};
+
+/** Monthly KPI series (last 6 complete months) for the card sparklines. */
+export async function fetchKpiTrends(): Promise<KpiTrends> {
+  await simulateLatency(300);
+
+  const months = completeMonths(6).map(monthKey);
+  const byMonth = new Map(
+    months.map((key) => [
+      key,
+      { collected: 0, pending: 0, invoices: 0, customerIds: new Set<string>() },
+    ]),
+  );
+
+  for (const invoice of invoices) {
+    const bucket = byMonth.get(invoice.date.slice(0, 7));
+    if (!bucket) continue;
+    if (invoice.status === 'paid') bucket.collected += invoice.amount / 100;
+    else bucket.pending += invoice.amount / 100;
+    bucket.invoices += 1;
+    bucket.customerIds.add(invoice.customer_id);
+  }
+
+  const series = (pick: (b: {
+    collected: number;
+    pending: number;
+    invoices: number;
+    customerIds: Set<string>;
+  }) => number) => months.map((key) => pick(byMonth.get(key)!));
+
+  const withDelta = (values: number[]): KpiTrend => {
+    const last = values[values.length - 1];
+    const prev = values[values.length - 2];
+    const delta = prev === 0 ? 0 : ((last - prev) / prev) * 100;
+    return { series: values, delta };
+  };
+
+  return {
+    collected: withDelta(series((b) => Math.round(b.collected))),
+    pending: withDelta(series((b) => Math.round(b.pending))),
+    invoices: withDelta(series((b) => b.invoices)),
+    customers: withDelta(series((b) => b.customerIds.size)),
   };
 }
 
