@@ -14,7 +14,7 @@ export default async function SalesByRegion() {
         <div className="grow rounded-md bg-white p-4">
           <RegionBars data={data} />
         </div>
-        <p className="pt-4 text-sm text-gray-500">Últimos 12 meses completos</p>
+        <p className="pt-4 text-sm text-gray-600">Últimos 12 meses completos</p>
       </div>
     </div>
   );

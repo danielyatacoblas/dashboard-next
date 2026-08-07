@@ -4,6 +4,7 @@
 // so server components keep the same fetching patterns they would use with a
 // real backend.
 
+import { ITEMS_PER_PAGE } from './constants';
 import {
   CustomerField,
   CustomersTableType,
@@ -200,8 +201,6 @@ export async function fetchKpiTrends(): Promise<KpiTrends> {
     customers: withDelta(series((b) => b.customerIds.size)),
   };
 }
-
-const ITEMS_PER_PAGE = 6;
 
 function matchesQuery(invoice: InvoicesTable, query: string) {
   if (!query) return true;
