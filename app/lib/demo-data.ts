@@ -64,6 +64,23 @@ const CUSTOMER_SEED: { name: string; region: (typeof REGIONS)[number] }[] = [
   { name: 'Fiorella Gutiérrez Luna', region: 'Lima' },
   { name: 'Diego Espinoza Cárdenas', region: 'Trujillo' },
   { name: 'Sofía Cárdenas Bravo', region: 'Piura' },
+  { name: 'Andrés Camargo Ríos', region: 'Lima' },
+  { name: 'Patricia Ledesma Ávila', region: 'Chiclayo' },
+  { name: 'Gonzalo Ibáñez Ruiz', region: 'Arequipa' },
+  { name: 'Milagros Ventura Soto', region: 'Lima' },
+  { name: 'Renzo Tapia Aguirre', region: 'Cusco' },
+  { name: 'Elena Zúñiga Palma', region: 'Huancayo' },
+  { name: 'Óscar Meléndez Rivas', region: 'Trujillo' },
+  { name: 'Karina Bustamante Loayza', region: 'Lima' },
+  { name: 'Julio Manrique Escobar', region: 'Tacna' },
+  { name: 'Bertha Quintanilla Ríos', region: 'Piura' },
+  { name: 'Sebastián Alarcón Vera', region: 'Lima' },
+  { name: 'Noelia Carrasco Pinto', region: 'Arequipa' },
+  { name: 'Iván Ramírez Colque', region: 'Cusco' },
+  { name: 'Claudia Bermúdez Ríos', region: 'Chiclayo' },
+  { name: 'Marco Antonio Peralta', region: 'Lima' },
+  { name: 'Yolanda Sifuentes Cruz', region: 'Trujillo' },
+  { name: 'Álvaro Necochea Díaz', region: 'Lima' },
 ];
 
 const ACCENT_MAP: Record<string, string> = {
@@ -112,6 +129,21 @@ export const customers: Customer[] = CUSTOMER_SEED.map((seed, i) => ({
 
 const MONTHS_OF_HISTORY = 18;
 
+// The store acquires customers over time: a third of them are there from the
+// start and the rest join progressively, so the active-customers KPI grows
+// instead of sitting flat at the full roster every month.
+const acquisitionMonth = new Map<string, number>(
+  customers.map((customer, i) => [
+    customer.id,
+    i < customers.length / 3
+      ? MONTHS_OF_HISTORY - 1
+      : Math.floor(
+          (MONTHS_OF_HISTORY - 1) *
+            (1 - (i - customers.length / 3) / (customers.length * 0.7)),
+        ),
+  ]),
+);
+
 // Seasonality multiplier per calendar month (0 = January).
 const SEASONALITY = [
   0.82, 0.85, 0.95, 1.0, 1.12, 1.0, 1.38, 1.02, 0.95, 1.0, 1.18, 1.62,
@@ -131,7 +163,7 @@ for (let m = MONTHS_OF_HISTORY - 1; m >= 0; m--) {
   // Upward trend (~2.2% monthly) with seasonality.
   const trend = Math.pow(1.022, monthsFromStart);
   const season = SEASONALITY[monthDate.getMonth()];
-  const orderCount = Math.round(randBetween(24, 30) * trend * season);
+  const orderCount = Math.round(randBetween(38, 52) * trend * season);
 
   const daysInMonth = new Date(
     monthDate.getFullYear(),
@@ -141,8 +173,14 @@ for (let m = MONTHS_OF_HISTORY - 1; m >= 0; m--) {
   // Don't create orders in the future within the current month.
   const maxDay = m === 0 ? Math.max(now.getDate(), 1) : daysInMonth;
 
+  // Only customers already acquired by this month can place orders.
+  const activeCustomers = customers.filter(
+    (customer) => (acquisitionMonth.get(customer.id) ?? 0) >= m,
+  );
+
   for (let i = 0; i < orderCount; i++) {
-    const customer = customers[Math.floor(rand() * customers.length)];
+    const customer =
+      activeCustomers[Math.floor(rand() * activeCustomers.length)];
     const day = 1 + Math.floor(rand() * maxDay);
     const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
 
@@ -151,8 +189,10 @@ for (let m = MONTHS_OF_HISTORY - 1; m >= 0; m--) {
     const bigOrder = rand() < 0.12 ? randBetween(400, 1600) : 0;
     const amount = Math.round((base + bigOrder) * trend * 100); // céntimos
 
-    // Recent orders are more likely to still be pending collection.
-    const pendingChance = m === 0 ? 0.55 : m === 1 ? 0.3 : 0.08;
+    // Collection curve: the older the order, the likelier it was already
+    // collected. Decays smoothly so month-over-month deltas stay believable
+    // (a step function here produces absurd swings in the KPI cards).
+    const pendingChance = 0.05 + 0.5 * Math.exp(-m / 1.8);
     const status: Invoice['status'] =
       rand() < pendingChance ? 'pending' : 'paid';
 
