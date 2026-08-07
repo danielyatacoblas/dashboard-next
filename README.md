@@ -58,8 +58,8 @@ flowchart LR
 ```bash
 git clone https://github.com/danielyatacoblas/dashboard-analytic.git
 cd dashboard-analytic
-pnpm install     # o npm install
-pnpm dev         # http://localhost:3000
+npm install
+npm run dev      # http://localhost:3000
 ```
 
 Sin `.env`, sin base de datos, sin servicios externos.
