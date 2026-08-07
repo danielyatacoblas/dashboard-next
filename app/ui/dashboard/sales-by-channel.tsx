@@ -11,10 +11,10 @@ export default async function SalesByChannel() {
         Ventas por canal
       </h2>
       <div className="flex grow flex-col rounded-xl bg-gray-50 p-4">
-        <div className="flex grow items-center rounded-md bg-white p-4">
+        <div className="flex grow items-center overflow-visible rounded-md bg-white p-4">
           <ChannelDonut data={data} />
         </div>
-        <p className="pt-4 text-sm text-gray-500">Últimos 12 meses completos</p>
+        <p className="pt-4 text-sm text-gray-600">Últimos 12 meses completos</p>
       </div>
     </div>
   );
