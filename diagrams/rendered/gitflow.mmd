@@ -1,38 +1,73 @@
-flowchart LR
-  subgraph trabajo["Ramas de trabajo"]
-    direction TB
-    feature["feature/*<br/>funcionalidad nueva"]
-    fix["fix/*<br/>corrección de defecto"]
-    chore["chore/*<br/>mantenimiento y tooling"]
-    docs["docs/*<br/>documentación y capturas"]
-  end
-  subgraph integracion["Integración"]
-    direction TB
-    develop["develop<br/>integra el trabajo antes de publicar"]
-  end
-  subgraph verificacion["Verificación"]
-    direction TB
-    build["npm run build<br/>compilación de producción"]
-    types["npm run typecheck<br/>tsc --noEmit"]
-    lint["npm run lint<br/>eslint"]
-  end
-  subgraph publicacion["Publicación"]
-    direction TB
-    main["main<br/>solo recibe merges desde develop"]
-  end
-  subgraph distribucion["Distribución"]
-    direction TB
-    github["GitHub<br/>historia con un único autor"]
-    release["Versión publicada<br/>clonar y ejecutar"]
-  end
-  feature -->|"merge --no-ff"| develop
-  fix -->|"merge --no-ff"| develop
-  chore -->|"merge --no-ff"| develop
-  docs -->|"merge --no-ff"| develop
-  develop -->|"se verifica"| build
-  build -->|"y además"| types
-  types -->|"y además"| lint
-  lint -->|"merge --no-ff"| main
-  main -->|"push"| github
-  github -->|"publica"| release
-  build -.->|"si falla, se corrige"| develop
+gitGraph
+   commit id: "Initial commit from Create Next App"
+   commit id: "first commit"
+   commit id: "second commit"
+   branch develop
+   branch refactor/rebrand
+   commit id: "feat: replace Acme logo and Vercel i..."
+   commit id: "feat: rewrite landing page with Kipu..."
+   commit id: "+2 commits mas"
+   checkout develop
+   merge refactor/rebrand
+   branch feature/data-layer
+   commit id: "feat: add deterministic seeded datas..."
+   commit id: "refactor: reimplement data queries a..."
+   commit id: "+2 commits mas (2)"
+   checkout develop
+   merge feature/data-layer
+   branch feature/dashboard-pages
+   commit id: "feat: implement dashboard overview w..."
+   commit id: "feat: implement orders page with deb..."
+   commit id: "+3 commits mas"
+   checkout develop
+   merge feature/dashboard-pages
+   branch feature/charts
+   commit id: "feat: add chart queries (revenue com..."
+   commit id: "feat: replace div bars with recharts..."
+   checkout develop
+   merge feature/charts
+   branch fix/demo-data-realism
+   commit id: "fix: make demo dataset produce belie..."
+   checkout develop
+   merge fix/demo-data-realism
+   branch docs/readme-and-license
+   commit id: "docs: add proprietary license"
+   commit id: "docs: add dashboard screenshots"
+   commit id: "+1 commits mas"
+   checkout develop
+   merge docs/readme-and-license
+   checkout main
+   merge develop tag: "Kipu Analytics release"
+   checkout develop
+   branch chore/remove-emojis
+   commit id: "docs: remove emojis from README head..."
+   checkout develop
+   merge chore/remove-emojis
+   branch chore/stabilize-deps
+   commit id: "chore: move from Next.js/React prere..."
+   checkout develop
+   merge chore/stabilize-deps
+   branch feature/ui-polish
+   commit id: "feat: raise table density, fix pagin..."
+   checkout develop
+   merge feature/ui-polish
+   branch docs/screenshots-refresh
+   commit id: "docs: refresh screenshots after the ..."
+   checkout develop
+   merge docs/screenshots-refresh
+   checkout main
+   merge develop tag: "portfolio release"
+   checkout develop
+   branch chore/harden-gitignore
+   commit id: "chore: harden gitignore against comm..."
+   checkout develop
+   merge chore/harden-gitignore
+   checkout main
+   merge develop tag: "gitignore hardening"
+   checkout develop
+   branch docs/diagrams
+   commit id: "docs: add generated architecture and..."
+   checkout develop
+   merge docs/diagrams
+   checkout main
+   merge develop tag: "diagrams"
