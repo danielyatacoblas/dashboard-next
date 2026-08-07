@@ -86,9 +86,90 @@ de modo que la documentacion no se desincroniza del proyecto.
 
 ![Flujo de la aplicacion](diagrams/rendered/flujo.svg)
 
-### Modelo de ramas
+### Flujo de trabajo con Git
 
-![Gitflow](diagrams/rendered/gitflow.svg)
+El repositorio sigue Git Flow: `main` siempre desplegable, `develop` como
+integracion, y una rama por cambio. Los merges son `--no-ff` para que cada
+funcionalidad quede como un bloque legible en el historial, y cada version
+llega a `main` etiquetada.
+
+Este es el historial real del repositorio, no un ejemplo:
+
+```mermaid
+gitGraph
+   commit id: "Initial commit from Create Next App"
+   commit id: "first commit"
+   commit id: "second commit"
+   branch develop
+   branch refactor/rebrand
+   commit id: "feat: replace Acme logo and Vercel i..."
+   commit id: "feat: rewrite landing page with Kipu..."
+   commit id: "+2 commits mas"
+   checkout develop
+   merge refactor/rebrand
+   branch feature/data-layer
+   commit id: "feat: add deterministic seeded datas..."
+   commit id: "refactor: reimplement data queries a..."
+   commit id: "+2 commits mas (2)"
+   checkout develop
+   merge feature/data-layer
+   branch feature/dashboard-pages
+   commit id: "feat: implement dashboard overview w..."
+   commit id: "feat: implement orders page with deb..."
+   commit id: "+3 commits mas"
+   checkout develop
+   merge feature/dashboard-pages
+   branch feature/charts
+   commit id: "feat: add chart queries (revenue com..."
+   commit id: "feat: replace div bars with recharts..."
+   checkout develop
+   merge feature/charts
+   branch fix/demo-data-realism
+   commit id: "fix: make demo dataset produce belie..."
+   checkout develop
+   merge fix/demo-data-realism
+   branch docs/readme-and-license
+   commit id: "docs: add proprietary license"
+   commit id: "docs: add dashboard screenshots"
+   commit id: "+1 commits mas"
+   checkout develop
+   merge docs/readme-and-license
+   checkout main
+   merge develop tag: "Kipu Analytics release"
+   checkout develop
+   branch chore/remove-emojis
+   commit id: "docs: remove emojis from README head..."
+   checkout develop
+   merge chore/remove-emojis
+   branch chore/stabilize-deps
+   commit id: "chore: move from Next.js/React prere..."
+   checkout develop
+   merge chore/stabilize-deps
+   branch feature/ui-polish
+   commit id: "feat: raise table density, fix pagin..."
+   checkout develop
+   merge feature/ui-polish
+   branch docs/screenshots-refresh
+   commit id: "docs: refresh screenshots after the ..."
+   checkout develop
+   merge docs/screenshots-refresh
+   checkout main
+   merge develop tag: "portfolio release"
+   checkout develop
+   branch chore/harden-gitignore
+   commit id: "chore: harden gitignore against comm..."
+   checkout develop
+   merge chore/harden-gitignore
+   checkout main
+   merge develop tag: "gitignore hardening"
+   checkout develop
+   branch docs/diagrams
+   commit id: "docs: add generated architecture and..."
+   checkout develop
+   merge docs/diagrams
+   checkout main
+   merge develop tag: "diagrams"
+```
 
 Regenerar despues de editar la especificacion:
 
